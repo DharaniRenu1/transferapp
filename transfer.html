@@ -1,0 +1,380 @@
+# transferapp
+<!DOCTYPE html>
+<html>
+<head>
+<title>Test</title>
+<script src="web3.min.js"></script>
+<style>
+h1 {
+    text-shadow: 8px 8px 15px yellow;
+}
+ th, td {
+border-radius: 25px;
+    border: 1px solid black;
+ text-align: right;
+box-shadow: 5px 5px 5px lightgreen;
+ 
+}
+</style>
+</head>
+<body bgcolor="black">
+<center><h1><font face="French Script mt" color=red size=40>Amount Transfer</font></h1><center><table bgcolor="green">
+<tr>
+<td>
+<input id="acc" type=number placeholder="Account Number"/></td>
+<td>
+<input id="tamt" type=number placeholder="Amount"/>
+</td><td colspan="2">
+<button id="transferId" onclick="trans()">Transfer</button>
+</td></tr>
+<td><input id="Acc" type=number  placeholder="Account Number"/></td>
+<td><input id="amtt" type=number  placeholder="Amount"/></td>
+<td colspan="2"><button id="Approval" onclick="approval()">Approval</button></td><br>
+</tr><tr>
+<td><input id="Acc1" type=number  placeholder="Account Number"/></td>
+<td colspan="3" align=right><button id="allowa" onclick="allowa()">Allowance</button></td><br>
+</tr><tr>
+<BR>
+<td><input id="Acc2" type=number placeholder="Account Number"/></td>
+<td><input id="acc1" type=number  placeholder="Account Number"/></td>
+<td><input id="amt1" type=number  placeholder="Amount"/></td>
+<td><button id="transferIdFrom" onclick="transfrom()">TransferFrom</button></td>
+<br></tr>
+<tr>
+<td colspan="2"><input id="amount" type=number  placeholder="Amount"/></td>
+<td><button id="mint" onclick="mint()">Mintable</button></td>
+</tr>
+<tr>
+<td><input id="Owner" type=number  placeholder="Account Number"/></td>
+<td colspan="3" align=right><button id="balanceId" onclick="bal()">Balance</button></td>
+<tr >
+<td  colspan="4"><pre id="hashresult"></td></pre></tr>
+<tr>
+<td colspan="4"><font face="French Script mt" color=yellow size=5><marquee behavior="alternate">Previous Hash<pre id="prehashresult"></td></pre>
+</tr>
+</table>
+</body>
+<script>
+ web3.eth.defaultAccount = web3.eth.accounts[0];
+        var erc20= web3.eth.contract([
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "name",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalSupply",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amt",
+				"type": "uint256"
+			}
+		],
+		"name": "withdraw",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "from",
+				"type": "address"
+			}
+		],
+		"name": "allowance",
+		"outputs": [
+			{
+				"name": "remain",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"name": "token",
+				"type": "uint256"
+			}
+		],
+		"name": "transferfrom",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "from",
+				"type": "address"
+			},
+			{
+				"name": "token",
+				"type": "uint256"
+			}
+		],
+		"name": "approval",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "symbol",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amt",
+				"type": "uint256"
+			}
+		],
+		"name": "mint",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "to",
+				"type": "address"
+			},
+			{
+				"name": "amt",
+				"type": "uint256"
+			}
+		],
+		"name": "transfer",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			},
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amt",
+				"type": "uint256"
+			}
+		],
+		"name": "deposit",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	}
+]);
+var erc2=erc20.at('0xe6c4259277e86e6a2e1072833477151a8ab8a0dd');
+var deposit1=document.getElementById('deposit');
+var withdraw=document.getElementById('withdraw');
+var tamt=document.getElementById('tamt');
+var acc=document.getElementById('acc');
+var acc1=document.getElementById('acc1');
+var amtt=document.getElementById('amtt');
+var Acc1=document.getElementById('Acc1');
+var Acc2=document.getElementById('Acc2');
+var amount=document.getElementById('amount');
+var Acc=document.getElementById('Acc');
+ var amt1=document.getElementById('amt1');
+var owner=document.getElementById('Owner');
+var output=document.getElementById('hashresult');
+var preoutput=document.getElementById('prehashresult');
+if(!web3.isConnected()) {
+  
+        console.log("Ok");
+        
+      } else {
+        console.log("no");
+      }
+      web3.version.getNetwork((err, netId) => {
+            switch (netId) {
+              case "1":
+                console.log('This is mainnet')
+                break
+              case "2":
+                console.log('This is the deprecated Morden test network.')
+                break
+              case "3":
+                console.log('This is the ropsten test network.')
+                break
+              case "4":
+                console.log('This is the Rinkeby test network.')
+                break
+              case "42":
+                console.log('This is the Kovan test network.')
+                break
+              default:
+                console.log('This is an unknown network.')
+            }
+        })
+function trans()
+	{
+	alert(Number(tamt.value));
+	 return erc2.transfer(acc.value,parseInt(tamt.value),function(err,res){
+                if (!err) {
+                   
+		      output.innerHTML  = res;
+                }
+                else{
+		  
+                  output.innerHTML = "Error";
+                }
+              });
+	}
+function transfrom()
+	{
+             
+		return erc2.transferfrom(Acc2.value,acc1.value,parseInt(amt1.value),function(err,res){
+                if (!err) {
+                   
+		      output.innerText = res;
+                }
+                else{
+		  
+                  output.innerHTML = "Error";
+                }
+              });
+	}
+function approval()
+	{
+	
+	 return erc2.approval(Acc.value,parseInt(amtt.value),function(err,res){
+                if (!err) {
+                   
+		      output.innerHTML  = res;
+                }
+                else{
+		  
+                  output.innerHTML = "Error";
+                }
+              });
+	}
+function allowa(){
+        
+        return erc2.allowance(Acc1.value,function(err,res){
+                if (!err) {
+                  output.innerHTML  = res;
+                }
+                else{
+                  output.innerHTML  = "Error";
+                }
+              });
+}
+function mint(){
+        
+        return erc2.mint(parseInt(amount.value),function(err,res){
+                if (!err) {
+                  output.innerHTML  = res;
+                }
+                else{
+                  output.innerHTML  = "Error";
+                }
+              });
+}
+function bal(){
+        
+        return erc2.balanceOf(owner.value,function(err,res){
+                if (!err) {
+                  output.innerHTML  = res;
+                }
+                else{
+                  output.innerHTML  = "Error";
+                }
+              });
+}
+</script>
+</html>
